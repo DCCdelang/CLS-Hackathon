@@ -47,10 +47,12 @@ def distance_matrix(stations, numbers):
 
     for i in range(len(matrix)):
         for j in range(len(matrix[i])):
-            matrix[i][j] = np.inf
+            matrix[i][j] = 1000
 
     for i in range(len(matrix[0])):
         matrix[0][i] = 0
+
+    matrix[0][0] = 1000
 
     for station in stations:
         current_station = stations[station]
