@@ -14,7 +14,7 @@ t: time of all trajectories together
 def load_stations():
     stations = {}
     numbers = {}
-    counter = 0
+    counter = 1
 
     with open("Stations.csv") as data:
         for row in data:
@@ -42,12 +42,15 @@ def load_connections(stations):
             stations[items[1]].add_connection(items[0], float(items[2]))
 
 def distance_matrix(stations, numbers):
-    i = len(stations.keys())
+    i = len(stations.keys()) + 1
     matrix = np.zeros(shape=(i,i))
 
     for i in range(len(matrix)):
         for j in range(len(matrix[i])):
             matrix[i][j] = np.inf
+
+    for i in range(len(matrix[0])):
+        matrix[0][i] = 0
 
     for station in stations:
         current_station = stations[station]
@@ -67,9 +70,6 @@ def main():
 
     # print(stations["Zaandam"].connections)
     # print(matrix[numbers["Zaandam"]])
-
-    Nt = 5
-    max_traject_time = 180
 
 
 
