@@ -70,6 +70,7 @@ def main():
 
     # print(stations["Zaandam"].connections)
     # print(matrix[numbers["Zaandam"]])
+    print(matrix[0])
 
 
 
