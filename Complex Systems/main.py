@@ -1,5 +1,5 @@
-from numpy.core.einsumfunc import _parse_einsum_input
 import pandas as pd
+import numpy as np
 
 from Classes import Station
 
@@ -13,6 +13,8 @@ t: time of all trajectories together
 
 def load_stations():
     stations = {}
+    numbers = {}
+    counter = 0
 
     with open("Stations.csv") as data:
         for row in data:
@@ -25,8 +27,10 @@ def load_stations():
                 critical = True
 
             stations[items[0]] = Station(items[0], float(items[1]), float(items[2]), critical)
-    
-    return stations
+            numbers[items[0]] = counter
+            counter += 1
+
+    return stations, numbers
 
 def load_connections(stations):
     with open("Connection_Times.csv") as data:
@@ -37,10 +41,37 @@ def load_connections(stations):
             stations[items[0]].add_connection(items[1], float(items[2]))
             stations[items[1]].add_connection(items[0], float(items[2]))
 
+def distance_matrix(stations, numbers):
+    i = len(stations.keys())
+    matrix = np.zeros(shape=(i,i))
+
+    for i in range(len(matrix)):
+        for j in range(len(matrix[i])):
+            matrix[i][j] = np.inf
+
+    for station in stations:
+        current_station = stations[station]
+        current_num = numbers[station]
+
+        for destination in current_station.connections:
+            destination_num = numbers[destination]
+            matrix[current_num][destination_num] = current_station.connections[destination]
+
+    return matrix
 
 def main():
-    stations = load_stations()
+    stations, numbers = load_stations()
     load_connections(stations)
+
+    matrix = distance_matrix(stations, numbers)
+
+    # print(stations["Zaandam"].connections)
+    # print(matrix[numbers["Zaandam"]])
+
+    Nt = 5
+    max_traject_time = 180
+
+
 
 
 if __name__ == "__main__":
